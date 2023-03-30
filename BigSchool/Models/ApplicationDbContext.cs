@@ -36,6 +36,7 @@ namespace BigSchool.Models
                .HasMany(u => u.followees)
                .WithRequired(f => f.Follower)
                .WillCascadeOnDelete(false);
+
             base.OnModelCreating(modelBuilder);
         }
 
