@@ -1,5 +1,6 @@
 ﻿using BigSchool.Models;
 using BigSchool.ViewModels;
+using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -23,5 +24,29 @@ namespace BigSchool.Controllers
             };
             return View(viewModel);
         }
+        [Authorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create (CourseViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                model.Categories = _dbContext.categories.ToList();  
+                return View("Create",model);
+            }
+           var course = new Course() { 
+               LectureId= User.Identity.GetUserId(),
+               DateTime= model.GetDateTime(),
+               CategoryID = model.Category,
+               Place = model.Place,
+
+
+           };
+            _dbContext.courses.Add(course); 
+            _dbContext.SaveChanges();
+            return RedirectToAction("Index","Home");
+        }
+
+
     }
 }
